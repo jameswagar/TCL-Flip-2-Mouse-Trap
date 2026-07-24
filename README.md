@@ -4,9 +4,11 @@ Mouse Trap is a keypad-friendly app and LSPosed module for the rooted TCL Flip 2
 
 ## What it does
 
-- Presents a full-screen, keypad-friendly list of launchable third-party apps.
+- Presents a keypad-friendly list of launchable third-party apps with 36dp icons, 18sp wrapped labels, high-contrast checkboxes, and a live **Custom Targets** count.
+- Uses the launcher wallpaper around the title and bottom save action while fully occluding it behind the app list.
+- Uses **OK** to toggle the focused checkbox without saving immediately.
+- Places the single **Save Mouse Targets** action at the absolute bottom of the screen; D-pad Down from the final app focuses it and OK saves.
 - Excludes system/internal pages and apps already covered by DumbDown Launcher's built-in mouse list.
-- Wraps long app names and updates the custom-target count live.
 - Starts with Beeper, Telegram, and Lime selected.
 - Preserves the launcher's existing behavior for Spotify, Uber Lite, Chrome, Maps Lite, Apple Music, AntennaPod, and OpenBubbles.
 - Uses a mouse-pointer app icon.
@@ -33,7 +35,7 @@ Mouse Trap does not implement a second mouse or accessibility service. Its LSPos
    ```
 3. In LSPosed, enable **Mouse Trap** and scope it only to **Dumb Launcher** (`com.offlineinc.dumbdownlauncher`).
 4. Restart DumbDown Launcher once (or reboot the phone).
-5. Open Mouse Trap, select apps, and choose **Save mouse targets**.
+5. Open Mouse Trap, select apps with **OK**, move down to **Save Mouse Targets**, and press **OK** to save.
 
 The selected package names are stored in the per-user Android secure setting `mousetrap_packages`.
 

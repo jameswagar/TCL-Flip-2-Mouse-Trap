@@ -45,7 +45,7 @@ fi
 
 "$BT/apksigner" sign --ks "$KEYSTORE" \
   --ks-pass env:MOUSE_TRAP_STOREPASS --key-pass env:MOUSE_TRAP_KEYPASS \
-  --out "$OUT/Mouse-Trap-v1.2.0.apk" "$OUT/mousetrap-aligned.apk"
+  --out "$OUT/Mouse-Trap-v1.3.0.apk" "$OUT/mousetrap-aligned.apk"
 
-"$BT/apksigner" verify --verbose --print-certs "$OUT/Mouse-Trap-v1.2.0.apk"
-shasum -a 256 "$OUT/Mouse-Trap-v1.2.0.apk"
+"$BT/apksigner" verify --verbose --print-certs "$OUT/Mouse-Trap-v1.3.0.apk"
+shasum -a 256 "$OUT/Mouse-Trap-v1.3.0.apk"
