@@ -19,7 +19,7 @@ Required phone components:
 
 - Root/Magisk
 - DumbMouse (the phone's existing Magisk module/native mouse service)
-- LSPosed
+- [LSPosed 1.9.2](https://github.com/LSPosed/LSPosed/releases/tag/v1.9.2) — the official release currently installed on the phone. The upstream repository is archived, but this is the exact compatible version used and verified by Mouse Trap.
 - DumbDown Launcher (`com.offlineinc.dumbdownlauncher`)
 
 Mouse Trap does not implement a second mouse or accessibility service. Its LSPosed hook augments the launcher's existing mouse-target decision. This avoids competing with the launcher's accessibility service.
