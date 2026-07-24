@@ -15,27 +15,28 @@ Mouse Trap is a keypad-friendly app and LSPosed module for the rooted TCL Flip 2
 
 ## Requirements and LSPosed dependency
 
-Mouse Trap **requires LSPosed for the automatic mouse behavior**. The configuration screen itself can open without LSPosed, but selecting apps will have no effect unless the module is enabled and scoped to DumbDown Launcher.
+Mouse Trap **requires LSPosed for the automatic mouse behavior**. LSPosed is a separate dependency: it is not bundled with Mouse Trap and is not preinstalled on a stock Dumb Co phone. Install LSPosed before configuring Mouse Trap. The configuration screen itself can open without LSPosed, but selecting apps will have no effect unless the module is enabled and scoped to DumbDown Launcher.
 
 Required phone components:
 
 - Root/Magisk
 - DumbMouse (the phone's existing Magisk module/native mouse service)
-- [LSPosed 1.9.2](https://github.com/LSPosed/LSPosed/releases/tag/v1.9.2) — the official release currently installed on the phone. The upstream repository is archived, but this is the exact compatible version used and verified by Mouse Trap.
+- [LSPosed 1.9.2](https://github.com/LSPosed/LSPosed/releases/tag/v1.9.2) — a separate dependency that must be installed on a stock Dumb Co phone. This archived official release is the exact version tested and verified for compatibility with Mouse Trap.
 - DumbDown Launcher (`com.offlineinc.dumbdownlauncher`)
 
 Mouse Trap does not implement a second mouse or accessibility service. Its LSPosed hook augments the launcher's existing mouse-target decision. This avoids competing with the launcher's accessibility service.
 
 ## Installation
 
-1. Install the signed release APK.
-2. Grant the one-time development permission:
+1. On a stock Dumb Co phone, install [LSPosed 1.9.2](https://github.com/LSPosed/LSPosed/releases/tag/v1.9.2). This dependency is not supplied by Mouse Trap or preinstalled by Dumb Co.
+2. Install the signed Mouse Trap release APK.
+3. Grant the one-time development permission:
    ```sh
    adb shell pm grant com.dumbphone.mousetrap android.permission.WRITE_SECURE_SETTINGS
    ```
-3. In LSPosed, enable **Mouse Trap** and scope it only to **Dumb Launcher** (`com.offlineinc.dumbdownlauncher`).
-4. Restart DumbDown Launcher once (or reboot the phone).
-5. Open Mouse Trap, select apps with **OK**, move down to **Save Mouse Targets**, and press **OK** to save.
+4. In LSPosed, enable **Mouse Trap** and scope it only to **Dumb Launcher** (`com.offlineinc.dumbdownlauncher`).
+5. Restart DumbDown Launcher once (or reboot the phone).
+6. Open Mouse Trap, select apps with **OK**, move down to **Save Mouse Targets**, and press **OK** to save.
 
 The selected package names are stored in the per-user Android secure setting `mousetrap_packages`.
 
