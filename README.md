@@ -66,3 +66,7 @@ Optional overrides:
 export MOUSE_TRAP_KEY_ALIAS=mousetrap
 read -s MOUSE_TRAP_KEYPASS && export MOUSE_TRAP_KEYPASS
 ```
+
+## Support and contributions
+
+This repository is published as-is. I am not offering support through GitHub Issues and I am not accepting pull requests. If you want to modify or extend the project, fork it and maintain your own version.
