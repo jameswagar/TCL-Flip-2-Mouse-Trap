@@ -8,7 +8,16 @@ JAVA_HOME="/opt/homebrew/opt/openjdk"
 export JAVA_HOME
 export PATH="$JAVA_HOME/bin:$PATH"
 OUT="$ROOT/build"
-KEYSTORE="$ROOT/mousetrap-release.jks"
+KEYSTORE="${MOUSE_TRAP_KEYSTORE:-$ROOT/mousetrap-release.jks}"
+KEY_ALIAS="${MOUSE_TRAP_KEY_ALIAS:-mousetrap}"
+: "${MOUSE_TRAP_STOREPASS:?Set MOUSE_TRAP_STOREPASS to build or sign the APK}"
+MOUSE_TRAP_KEYPASS="${MOUSE_TRAP_KEYPASS:-$MOUSE_TRAP_STOREPASS}"
+
+[[ -f "$KEYSTORE" ]] || {
+  echo "Signing keystore not found: $KEYSTORE" >&2
+  echo "Set MOUSE_TRAP_KEYSTORE to the established release key or a separately created development key." >&2
+  exit 2
+}
 
 rm -rf "$OUT"
 mkdir -p "$OUT/classes" "$OUT/dex"
@@ -36,14 +45,9 @@ mkdir -p "$OUT/classes" "$OUT/dex"
 
 "$BT/zipalign" -f 4 "$OUT/mousetrap-unsigned.apk" "$OUT/mousetrap-aligned.apk"
 
-if [[ ! -f "$KEYSTORE" ]]; then
-  "$JAVA_HOME/bin/keytool" -genkeypair -noprompt \
-    -keystore "$KEYSTORE" -storepass:env MOUSE_TRAP_STOREPASS -keypass:env MOUSE_TRAP_KEYPASS \
-    -alias mousetrap -keyalg RSA -keysize 2048 -validity 10000 \
-    -dname "CN=Mouse Trap, OU=Dumbphone, O=Local, C=US"
-fi
-
-"$BT/apksigner" sign --ks "$KEYSTORE" \
+MOUSE_TRAP_STOREPASS="$MOUSE_TRAP_STOREPASS" \
+MOUSE_TRAP_KEYPASS="$MOUSE_TRAP_KEYPASS" \
+  "$BT/apksigner" sign --ks "$KEYSTORE" --ks-key-alias "$KEY_ALIAS" \
   --ks-pass env:MOUSE_TRAP_STOREPASS --key-pass env:MOUSE_TRAP_KEYPASS \
   --out "$OUT/Mouse-Trap-v1.0.0.apk" "$OUT/mousetrap-aligned.apk"
 

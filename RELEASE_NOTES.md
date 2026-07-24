@@ -21,4 +21,4 @@ Automatic mouse activation requires **root/Magisk, DumbMouse, LSPosed, and DumbD
 - Package: `com.dumbphone.mousetrap`
 - Version: `1.2.0` (`versionCode 4`)
 - SHA-256: `8c9f1d269b36903e8518cd850f8dc8ff8824b2a7075b56c221ed67565296100d`
-- Verified installed APK on device serial `DEVICE_SERIAL` matched this digest exactly.
+- Verified that the installed APK on the test device matched this digest exactly.

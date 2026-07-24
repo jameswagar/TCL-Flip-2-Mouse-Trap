@@ -50,4 +50,19 @@ Disable Mouse Trap in LSPosed and restart DumbDown Launcher. The launcher's orig
 
 ## Building
 
-`build.sh` uses the locally installed Android SDK build tools and OpenJDK. It creates a local signing keystore if one does not exist. Signing keys and APK/build outputs are ignored by Git and must never be committed.
+`build.sh` uses the locally installed Android SDK build tools and OpenJDK. It deliberately refuses to create a signing identity: supply an existing release or development keystore and read the password without placing it in shell history:
+
+```sh
+export MOUSE_TRAP_KEYSTORE=/secure/path/mousetrap-release.jks
+read -s MOUSE_TRAP_STOREPASS && export MOUSE_TRAP_STOREPASS
+./build.sh
+```
+
+The official release keystore is required to produce update-compatible APKs. A newly generated development key can build test APKs but cannot update the official release. Preserve signing keys and passwords privately; the keystore, APK, and build outputs are ignored by Git and must never be committed.
+
+Optional overrides:
+
+```sh
+export MOUSE_TRAP_KEY_ALIAS=mousetrap
+read -s MOUSE_TRAP_KEYPASS && export MOUSE_TRAP_KEYPASS
+```
