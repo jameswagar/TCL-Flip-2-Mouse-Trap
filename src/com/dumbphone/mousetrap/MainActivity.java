@@ -67,7 +67,11 @@ public final class MainActivity extends Activity {
 
     private void configureWindow() {
         getWindow().requestFeature(14);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER
+                | WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        WindowManager.LayoutParams attributes = getWindow().getAttributes();
+        attributes.dimAmount = 0.85f;
+        getWindow().setAttributes(attributes);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
     }
@@ -96,8 +100,8 @@ public final class MainActivity extends Activity {
         listView.setId(View.generateViewId());
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setDivider(null);
-        listView.setCacheColorHint(Color.BLACK);
-        listView.setBackgroundColor(Color.BLACK);
+        listView.setCacheColorHint(Color.TRANSPARENT);
+        listView.setBackgroundColor(Color.TRANSPARENT);
         listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

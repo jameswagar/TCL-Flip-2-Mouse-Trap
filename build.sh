@@ -24,14 +24,24 @@ mkdir -p "$OUT/classes" "$OUT/dex"
 
 "$BT/aapt2" compile --dir "$ROOT/res" -o "$OUT/resources.zip"
 
+JAVA_FILES=()
+while IFS= read -r file; do
+  JAVA_FILES+=("$file")
+done < <(find "$ROOT/stubs" "$ROOT/src" -name '*.java' -print)
+
 "$JAVA_HOME/bin/javac" -source 8 -target 8 \
   -bootclasspath "$ANDROID_JAR" \
   -d "$OUT/classes" \
-  $(find "$ROOT/stubs" "$ROOT/src" -name '*.java' -print)
+  "${JAVA_FILES[@]}"
 
 # DEX only Mouse Trap's classes. Xposed stubs are compile-only and must never enter the APK.
+CLASS_FILES=()
+while IFS= read -r file; do
+  CLASS_FILES+=("$file")
+done < <(find "$OUT/classes/com/dumbphone/mousetrap" -name '*.class' -print)
+
 "$BT/d8" --min-api 23 --lib "$ANDROID_JAR" --output "$OUT/dex" \
-  $(find "$OUT/classes/com/dumbphone/mousetrap" -name '*.class' -print)
+  "${CLASS_FILES[@]}"
 
 "$BT/aapt2" link -o "$OUT/mousetrap-unsigned.apk" \
   -I "$ANDROID_JAR" --manifest "$ROOT/AndroidManifest.xml" \
@@ -49,7 +59,7 @@ MOUSE_TRAP_STOREPASS="$MOUSE_TRAP_STOREPASS" \
 MOUSE_TRAP_KEYPASS="$MOUSE_TRAP_KEYPASS" \
   "$BT/apksigner" sign --ks "$KEYSTORE" --ks-key-alias "$KEY_ALIAS" \
   --ks-pass env:MOUSE_TRAP_STOREPASS --key-pass env:MOUSE_TRAP_KEYPASS \
-  --out "$OUT/Mouse-Trap-v1.0.0.apk" "$OUT/mousetrap-aligned.apk"
+  --out "$OUT/Mouse-Trap-v1.0.1.apk" "$OUT/mousetrap-aligned.apk"
 
-"$BT/apksigner" verify --verbose --print-certs "$OUT/Mouse-Trap-v1.0.0.apk"
-shasum -a 256 "$OUT/Mouse-Trap-v1.0.0.apk"
+"$BT/apksigner" verify --verbose --print-certs "$OUT/Mouse-Trap-v1.0.1.apk"
+shasum -a 256 "$OUT/Mouse-Trap-v1.0.1.apk"
