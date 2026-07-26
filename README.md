@@ -2,6 +2,8 @@
 
 Mouse Trap is a keypad-friendly app and LSPosed module for the rooted TCL Flip 2. It lets the user choose additional apps that should automatically activate DumbMouse, without modifying or re-signing DumbDown Launcher.
 
+![Mouse Trap running on a TCL Flip 2](docs/images/mouse-trap.png)
+
 ## What it does
 
 - Presents a keypad-friendly list of launchable third-party apps with 36dp icons, 18sp wrapped labels, high-contrast checkboxes, and a live **Custom Targets** count.
