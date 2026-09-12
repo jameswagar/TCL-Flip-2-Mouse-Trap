@@ -59,7 +59,7 @@ MOUSE_TRAP_STOREPASS="$MOUSE_TRAP_STOREPASS" \
 MOUSE_TRAP_KEYPASS="$MOUSE_TRAP_KEYPASS" \
   "$BT/apksigner" sign --ks "$KEYSTORE" --ks-key-alias "$KEY_ALIAS" \
   --ks-pass env:MOUSE_TRAP_STOREPASS --key-pass env:MOUSE_TRAP_KEYPASS \
-  --out "$OUT/Mouse-Trap-v1.0.1.apk" "$OUT/mousetrap-aligned.apk"
+  --out "$OUT/Mouse-Trap-v1.0.3.apk" "$OUT/mousetrap-aligned.apk"
 
-"$BT/apksigner" verify --verbose --print-certs "$OUT/Mouse-Trap-v1.0.1.apk"
-shasum -a 256 "$OUT/Mouse-Trap-v1.0.1.apk"
+"$BT/apksigner" verify --verbose --print-certs "$OUT/Mouse-Trap-v1.0.3.apk"
+shasum -a 256 "$OUT/Mouse-Trap-v1.0.3.apk"
