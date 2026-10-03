@@ -1,6 +1,6 @@
-# Mouse Trap v1.0.4-beta.1
+# Mouse Trap v1.0.4
 
-Development candidate for Dumb Launcher `v6.37.0-beta.7` compatibility.
+Verified compatibility release for Dumb Launcher `v6.37.0-beta.7`.
 
 ## Changes
 
@@ -9,8 +9,9 @@ Development candidate for Dumb Launcher `v6.37.0-beta.7` compatibility.
 - Fails closed when no candidate or multiple candidates exist.
 - Preserves legacy `boolean(String)` support and existing configured package storage.
 
-## Verification status
+## Verification
 
-- Host resolver regression tests: required before packaging.
-- Exact signed APK identity and signer continuity: required before installation.
-- Runtime LSPosed binding to `bc.z0.f` and physical mouse behavior on the 4058G: required before release.
+- Host resolver regression tests passed.
+- Exact signed APK and signer continuity verified.
+- Runtime LSPosed binding to `bc.z0.f` verified on a 4058G.
+- Physical DumbMouse activation verified with Aurora Store and Beeper.
