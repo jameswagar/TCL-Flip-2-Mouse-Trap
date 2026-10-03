@@ -1,24 +1,16 @@
-# Mouse Trap v1.2.0
+# Mouse Trap v1.0.4-beta.1
 
-Initial verified release for the rooted TCL Flip 2.
+Development candidate for Dumb Launcher `v6.37.0-beta.7` compatibility.
 
-## Features
+## Changes
 
-- Select additional launchable apps that should automatically activate DumbMouse.
-- Defaults: Beeper, Telegram, and Lime.
-- Full-screen keypad-friendly chooser with wrapped long app names.
-- Live custom-target count.
-- Filters system/internal entries and DumbDown Launcher's existing mouse targets.
-- Mouse-pointer icon.
-- Update-resilient LSPosed hook that discovers the launcher's target predicate by signature and fails safely if it is no longer unique.
+- Adds verified launcher helper profiles for `bc.w0`, `bc.x0`, and `bc.z0`.
+- Requires exactly one static `boolean(Context, String)` collaborator across discovered and profiled classes.
+- Fails closed when no candidate or multiple candidates exist.
+- Preserves legacy `boolean(String)` support and existing configured package storage.
 
-## Requirements
+## Verification status
 
-Automatic mouse activation requires **root/Magisk, DumbMouse, LSPosed, and DumbDown Launcher**. The app UI opens without LSPosed, but selections do not affect mouse behavior until the module is enabled and scoped to `com.offlineinc.dumbdownlauncher`.
-
-## Verified artifact
-
-- Package: `com.dumbphone.mousetrap`
-- Version: `1.2.0` (`versionCode 4`)
-- SHA-256: `8c9f1d269b36903e8518cd850f8dc8ff8824b2a7075b56c221ed67565296100d`
-- Verified that the installed APK on the test device matched this digest exactly.
+- Host resolver regression tests: required before packaging.
+- Exact signed APK identity and signer continuity: required before installation.
+- Runtime LSPosed binding to `bc.z0.f` and physical mouse behavior on the 4058G: required before release.
