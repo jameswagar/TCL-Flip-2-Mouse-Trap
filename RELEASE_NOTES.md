@@ -1,17 +1,17 @@
-# Mouse Trap v1.0.4
+# Mouse Trap v1.0.5
 
-Verified compatibility release for Dumb Launcher `v6.37.0-beta.7`.
+Durable compatibility release for obfuscated Dumb Launcher builds.
 
 ## Changes
 
-- Adds verified launcher helper profiles for `bc.w0`, `bc.x0`, and `bc.z0`.
-- Requires exactly one static `boolean(Context, String)` collaborator across discovered and profiled classes.
-- Fails closed when no candidate or multiple candidates exist.
+- Replaces R8-generated helper-name profiles with bounded DEX discovery under `bc.*`.
+- Loads candidate classes without initialization and requires exactly one static `boolean(Context, String)` collaborator.
+- Fails closed when discovery is absent, ambiguous, or incomplete.
 - Preserves legacy `boolean(String)` support and existing configured package storage.
 
 ## Verification
 
-- Host resolver regression tests passed.
-- Exact signed APK and signer continuity verified.
-- Runtime LSPosed binding to `bc.z0.f` verified on a 4058G.
-- Physical DumbMouse activation verified with Aurora Store and Beeper.
+- Host resolver regression tests passed, including incomplete class-loading and method-inspection cases.
+- Exact signed APK, installed-byte identity, and signer continuity were verified.
+- Runtime LSPosed binding to `bc.a1.f` was verified on Dumb Launcher `v6.37.0-beta.10` on a 4058G.
+- Physical DumbMouse behavior was confirmed after installation.

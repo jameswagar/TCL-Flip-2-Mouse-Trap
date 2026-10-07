@@ -25,7 +25,8 @@ public final class Hook implements IXposedHookLoadPackage {
             if (target != null) {
                 how = "legacy";
             } else {
-                target = findCollaboratorTarget(serviceClass, lpparam.classLoader);
+                String sourceApk = lpparam.appInfo == null ? null : lpparam.appInfo.sourceDir;
+                target = findCollaboratorTarget(lpparam.classLoader, sourceApk);
                 how = "collaborator";
             }
             if (target == null) {
@@ -93,11 +94,11 @@ public final class Hook implements IXposedHookLoadPackage {
     }
 
     /**
-     * Resolve the static launcher predicate structurally across known R8 profiles and
-     * service field types. Exactly one candidate is required; ambiguity fails closed.
+     * Resolve the static launcher predicate structurally from the launcher's narrow
+     * obfuscated package. Exactly one candidate is required.
      */
-    private static Method findCollaboratorTarget(Class<?> serviceClass, ClassLoader cl) {
+    private static Method findCollaboratorTarget(ClassLoader cl, String sourceApk) {
         return HookTargetResolver.selectUniqueCandidate(
-                HookTargetResolver.collectCandidateClasses(serviceClass, cl));
+                HookTargetResolver.collectCandidateClasses(cl, sourceApk));
     }
 }

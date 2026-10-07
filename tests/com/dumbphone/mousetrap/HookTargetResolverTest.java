@@ -4,6 +4,8 @@ import android.content.Context;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public final class HookTargetResolverTest {
     private static final class Beta7Helper {
@@ -19,11 +21,6 @@ public final class HookTargetResolverTest {
     }
 
     public static void main(String[] args) {
-        assertEquals(
-                Arrays.asList("bc.w0", "bc.x0", "bc.z0"),
-                HookTargetResolver.knownHelperClassNames(),
-                "known launcher helper profiles");
-
         Method beta7 = HookTargetResolver.selectUniqueCandidate(
                 Arrays.<Class<?>>asList(Beta7Helper.class));
         assertNotNull(beta7, "beta.7-shaped helper must resolve");
@@ -37,6 +34,33 @@ public final class HookTargetResolverTest {
         Method wrong = HookTargetResolver.selectUniqueCandidate(
                 Arrays.<Class<?>>asList(WrongSignature.class));
         assertNull(wrong, "boxed Boolean return must not match");
+
+        List<Class<?>> discovered = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList(
+                        "bc.a1", "bc.b1", "bd.a1")),
+                HookTargetResolverTest.class.getClassLoader());
+        Method current = HookTargetResolver.selectUniqueCandidate(discovered);
+        assertNotNull(current, "current helper must be discovered without a name profile");
+        assertEquals("bc.a1", current.getDeclaringClass().getName(),
+                "only classes in the bc namespace participate");
+
+        assertThrowsDiscovery(
+                Collections.enumeration(Arrays.asList("bc.a1", "bc.missing")),
+                "an incomplete namespace scan must fail closed");
+
+        List<Class<?>> inspectionFailure = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("bc.a1", "bc.InspectionFailure")),
+                HookTargetResolverTest.class.getClassLoader());
+        assertEquals(Integer.valueOf(2), Integer.valueOf(inspectionFailure.size()),
+                "inspection fixture classes must load before method resolution");
+        assertThrowsInspection(inspectionFailure,
+                "an incomplete method scan must fail closed");
+
+        List<Class<?>> drifted = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("bc.a1", "bc.z0")),
+                HookTargetResolverTest.class.getClassLoader());
+        assertNull(HookTargetResolver.selectUniqueCandidate(drifted),
+                "multiple dynamic candidates must fail closed");
 
         System.out.println("HookTargetResolverTest: PASS");
     }
@@ -57,5 +81,25 @@ public final class HookTargetResolverTest {
         if (!expected.equals(actual)) {
             throw new AssertionError(message + ": expected=" + expected + " actual=" + actual);
         }
+    }
+
+    private static void assertThrowsDiscovery(
+            java.util.Enumeration<String> classNames, String message) {
+        try {
+            HookTargetResolver.collectDexCandidateClasses(
+                    classNames, HookTargetResolverTest.class.getClassLoader());
+        } catch (HookTargetResolver.DiscoveryException expected) {
+            return;
+        }
+        throw new AssertionError(message);
+    }
+
+    private static void assertThrowsInspection(List<Class<?>> classes, String message) {
+        try {
+            HookTargetResolver.selectUniqueCandidate(classes);
+        } catch (HookTargetResolver.DiscoveryException expected) {
+            return;
+        }
+        throw new AssertionError(message);
     }
 }

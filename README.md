@@ -44,7 +44,7 @@ The selected package names are stored in the per-user Android secure setting `mo
 
 ## Hook safety
 
-The current DumbDown Launcher obfuscates class and method names on each release. Mouse Trap resolves the legacy `boolean(String)` predicate structurally and supports verified static `boolean(Context, String)` helper profiles used by current releases. It requires exactly one matching target and refuses to hook when discovery is missing or ambiguous.
+The current DumbDown Launcher obfuscates class and method names on each release. Mouse Trap resolves the legacy `boolean(String)` predicate structurally. For current releases it enumerates the launcher's own DEX, loads classes only from the narrow `bc.*` namespace without initializing them, and requires exactly one static `boolean(Context, String)` target. It refuses to hook when discovery is missing or ambiguous rather than guessing from an R8-generated class name.
 
 ## Reverting
 

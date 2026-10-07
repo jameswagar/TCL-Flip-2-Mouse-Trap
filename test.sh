@@ -10,5 +10,12 @@ mkdir -p "$OUT"
   -bootclasspath "$ANDROID_JAR" \
   -d "$OUT" \
   "$ROOT/src/com/dumbphone/mousetrap/HookTargetResolver.java" \
+  "$ROOT/tests/bc/a1.java" \
+  "$ROOT/tests/bc/b1.java" \
+  "$ROOT/tests/bc/InspectionFailure.java" \
+  "$ROOT/tests/bc/MissingDependency.java" \
+  "$ROOT/tests/bc/z0.java" \
+  "$ROOT/tests/bd/a1.java" \
   "$ROOT/tests/com/dumbphone/mousetrap/HookTargetResolverTest.java"
+rm "$OUT/bc/MissingDependency.class"
 "$JAVA_HOME/bin/java" -cp "$OUT:$ANDROID_JAR" com.dumbphone.mousetrap.HookTargetResolverTest
