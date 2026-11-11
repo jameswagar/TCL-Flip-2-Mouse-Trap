@@ -94,8 +94,8 @@ public final class Hook implements IXposedHookLoadPackage {
     }
 
     /**
-     * Resolve the static launcher predicate structurally from the launcher's narrow
-     * obfuscated package. Exactly one candidate is required.
+     * Resolve the static launcher predicate structurally from the launcher's bounded
+     * obfuscated namespaces. Exactly one candidate is required across them.
      */
     private static Method findCollaboratorTarget(ClassLoader cl, String sourceApk) {
         return HookTargetResolver.selectUniqueCandidate(

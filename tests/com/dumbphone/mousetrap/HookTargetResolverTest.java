@@ -62,7 +62,75 @@ public final class HookTargetResolverTest {
         assertNull(HookTargetResolver.selectUniqueCandidate(drifted),
                 "multiple dynamic candidates must fail closed");
 
+        // --- Launcher 671 moved the predicate into the bounded ec namespace. ---
+
+        List<Class<?>> legacyNamespace = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("bc.a1")),
+                HookTargetResolverTest.class.getClassLoader());
+        Method legacyOnly = HookTargetResolver.selectUniqueCandidate(legacyNamespace);
+        assertNotNull(legacyOnly, "older bc-only launchers must keep resolving");
+        assertEquals("bc.a1.f", describe(legacyOnly), "older bc compatibility retained");
+
+        List<Class<?>> currentNamespace = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("ec.t0")),
+                HookTargetResolverTest.class.getClassLoader());
+        Method currentOnly = HookTargetResolver.selectUniqueCandidate(currentNamespace);
+        assertNotNull(currentOnly, "ec namespace must resolve for launcher 671");
+        assertEquals("ec.t0.i", describe(currentOnly), "671 predicate resolved by structure");
+
+        // Real 671 shape: the bc namespace still exists and holds lambda holders only.
+        List<Class<?>> mixedReal = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("bc.b1", "ec.t0")),
+                HookTargetResolverTest.class.getClassLoader());
+        assertEquals(Integer.valueOf(2), Integer.valueOf(mixedReal.size()),
+                "both bounded namespaces are scanned");
+        Method mixedRealTarget = HookTargetResolver.selectUniqueCandidate(mixedReal);
+        assertNotNull(mixedRealTarget,
+                "a candidate-free bc namespace must not block the ec predicate");
+        assertEquals("ec.t0.i", describe(mixedRealTarget), "unique match across namespaces wins");
+
+        List<Class<?>> crossAmbiguous = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("bc.a1", "ec.a1")),
+                HookTargetResolverTest.class.getClassLoader());
+        assertNull(HookTargetResolver.selectUniqueCandidate(crossAmbiguous),
+                "one candidate in bc and one in ec must fail closed");
+
+        List<Class<?>> ecDrifted = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("ec.a1", "ec.z0")),
+                HookTargetResolverTest.class.getClassLoader());
+        assertNull(HookTargetResolver.selectUniqueCandidate(ecDrifted),
+                "multiple ec candidates must fail closed");
+
+        List<Class<?>> wrongNamespace = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("ed.a1", "bd.a1")),
+                HookTargetResolverTest.class.getClassLoader());
+        assertEquals(Integer.valueOf(0), Integer.valueOf(wrongNamespace.size()),
+                "near-miss namespaces must never be scanned");
+
+        List<Class<?>> boundedWithNearMiss = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("ec.t0", "ed.a1")),
+                HookTargetResolverTest.class.getClassLoader());
+        Method boundedTarget = HookTargetResolver.selectUniqueCandidate(boundedWithNearMiss);
+        assertNotNull(boundedTarget, "a same-signature class outside the bounds is ignored");
+        assertEquals("ec.t0.i", describe(boundedTarget), "bounds are exact prefix labels");
+
+        assertThrowsDiscovery(
+                Collections.enumeration(Arrays.asList("ec.a1", "ec.missing")),
+                "an incomplete ec namespace scan must fail closed");
+
+        List<Class<?>> ecInspectionFailure = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("ec.a1", "ec.InspectionFailure")),
+                HookTargetResolverTest.class.getClassLoader());
+        assertEquals(Integer.valueOf(2), Integer.valueOf(ecInspectionFailure.size()),
+                "ec inspection fixtures must load before method resolution");
+        assertThrowsInspection(ecInspectionFailure,
+                "an incomplete ec method scan must fail closed");
+
         System.out.println("HookTargetResolverTest: PASS");
+    }
+
+    private static String describe(Method method) {
+        return method.getDeclaringClass().getName() + "." + method.getName();
     }
 
     private static void assertNotNull(Object value, String message) {

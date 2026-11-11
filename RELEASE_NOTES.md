@@ -1,17 +1,19 @@
-# Mouse Trap v1.0.5
+# Mouse Trap v1.0.6
 
-Durable compatibility release for obfuscated Dumb Launcher builds.
+Compatibility update for newer Dumb Launcher releases.
 
 ## Changes
 
-- Replaces R8-generated helper-name profiles with bounded DEX discovery under `bc.*`.
-- Loads candidate classes without initialization and requires exactly one static `boolean(Context, String)` collaborator.
-- Fails closed when discovery is absent, ambiguous, or incomplete.
-- Preserves legacy `boolean(String)` support and existing configured package storage.
+- Discovers the mouse-target predicate in both the `bc.*` and `ec.*` launcher namespaces, while requiring exactly one matching method across both.
+- Preserves support for older launchers and fails closed if discovery is missing or ambiguous.
+- Keeps existing Mouse Trap selections and the launcher's built-in targets unchanged.
 
 ## Verification
 
-- Host resolver regression tests passed, including incomplete class-loading and method-inspection cases.
-- Exact signed APK, installed-byte identity, and signer continuity were verified.
-- Runtime LSPosed binding to `bc.a1.f` was verified on Dumb Launcher `v6.37.0-beta.10` on a 4058G.
-- Physical DumbMouse behavior was confirmed after installation.
+- Host resolver tests cover both namespaces, older and newer targets, ambiguity, and incomplete discovery.
+- A signed 1.0.6-dev candidate was installed on a TCL 4058G running Dumb Launcher v6.55.0-beta.13. LSPosed logged the expected hook and the user confirmed that the mouse worked.
+- The final release's packaged code was compared with that tested development candidate; the release APK itself was not installed on the phone.
+
+## Updating
+
+Install the signed APK over the existing Mouse Trap installation and restart Dumb Launcher. Existing selections and LSPosed scope are retained by an in-place update.

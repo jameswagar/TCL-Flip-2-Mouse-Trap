@@ -12,7 +12,9 @@ import java.util.Set;
 
 /** Fail-closed structural resolver for Dumb Launcher mouse-target predicates. */
 final class HookTargetResolver {
-    private static final String HELPER_PACKAGE_PREFIX = "bc.";
+    private static boolean isHelperPackage(String className) {
+        return className.startsWith("bc.") || className.startsWith("ec.");
+    }
 
     static final class DiscoveryException extends RuntimeException {
         DiscoveryException(String message, Throwable cause) {
@@ -63,7 +65,7 @@ final class HookTargetResolver {
         if (classNames == null || classLoader == null) return classes;
         while (classNames.hasMoreElements()) {
             String className = classNames.nextElement();
-            if (className == null || !className.startsWith(HELPER_PACKAGE_PREFIX)) continue;
+            if (className == null || !isHelperPackage(className)) continue;
             try {
                 Class<?> candidate = Class.forName(className, false, classLoader);
                 if (seen.add(candidate)) classes.add(candidate);
