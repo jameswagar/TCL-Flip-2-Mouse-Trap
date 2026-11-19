@@ -22,6 +22,7 @@ mkdir -p "$OUT"
   "$ROOT/tests/ec/InspectionFailure.java" \
   "$ROOT/tests/ec/MissingDependency.java" \
   "$ROOT/tests/ed/a1.java" \
+  "$ROOT/tests/fc/u0.java" \
   "$ROOT/tests/com/dumbphone/mousetrap/HookTargetResolverTest.java"
 rm "$OUT/bc/MissingDependency.class" "$OUT/ec/MissingDependency.class"
 "$JAVA_HOME/bin/java" -cp "$OUT:$ANDROID_JAR" com.dumbphone.mousetrap.HookTargetResolverTest

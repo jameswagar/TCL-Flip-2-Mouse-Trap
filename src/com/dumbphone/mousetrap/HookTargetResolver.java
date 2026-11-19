@@ -13,7 +13,8 @@ import java.util.Set;
 /** Fail-closed structural resolver for Dumb Launcher mouse-target predicates. */
 final class HookTargetResolver {
     private static boolean isHelperPackage(String className) {
-        return className.startsWith("bc.") || className.startsWith("ec.");
+        return className.startsWith("bc.") || className.startsWith("ec.")
+                || className.startsWith("fc.");
     }
 
     static final class DiscoveryException extends RuntimeException {

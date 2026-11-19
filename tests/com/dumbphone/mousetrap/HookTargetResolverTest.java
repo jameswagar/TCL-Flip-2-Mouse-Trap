@@ -126,6 +126,19 @@ public final class HookTargetResolverTest {
         assertThrowsInspection(ecInspectionFailure,
                 "an incomplete ec method scan must fail closed");
 
+        List<Class<?>> launcher707 = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("fc.u0")),
+                HookTargetResolverTest.class.getClassLoader());
+        Method target707 = HookTargetResolver.selectUniqueCandidate(launcher707);
+        assertNotNull(target707, "launcher 707 helper must be discovered");
+        assertEquals("fc.u0.i", describe(target707), "707 predicate resolved");
+
+        List<Class<?>> ambiguous707 = HookTargetResolver.collectDexCandidateClasses(
+                Collections.enumeration(Arrays.asList("ec.t0", "fc.u0")),
+                HookTargetResolverTest.class.getClassLoader());
+        assertNull(HookTargetResolver.selectUniqueCandidate(ambiguous707),
+                "multiple helpers across namespaces must fail closed");
+
         System.out.println("HookTargetResolverTest: PASS");
     }
 
